@@ -422,12 +422,12 @@ void CPlayerInfo::Update(double dt)
 	if (MouseController::GetInstance()->IsButtonPressed(MouseController::LMB))
 	{
 		if (primaryWeapon)
-			primaryWeapon->Discharge(position, target, this);
+			primaryWeapon->Discharge(position, &target, this);
 	}
 	else if (MouseController::GetInstance()->IsButtonPressed(MouseController::RMB))
 	{
 		if (secondaryWeapon)
-			secondaryWeapon->Discharge(position, target, this);
+			secondaryWeapon->Discharge(position, &target, this);
 	}
 
 	// If the user presses R key, then reset the view to default values
