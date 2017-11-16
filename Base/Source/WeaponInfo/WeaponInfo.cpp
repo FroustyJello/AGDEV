@@ -123,13 +123,6 @@ void CWeaponInfo::Init(void)
 	elapsedTime = 0.0;
 	// Boolean flag to indicate if weapon can fire now
 	bFire = true;
-
-	// Vertical Recoil
-	vRecoil = 0.f;
-	
-	// Horizontal Recoil
-	hRecoilMin = 0.f;
-	hRecoilMax = 0.f;
 }
 
 // Update the elapsed time
@@ -144,7 +137,7 @@ void CWeaponInfo::Update(const double dt)
 }
 
 // Discharge this weapon
-void CWeaponInfo::Discharge(Vector3 position, Vector3* target, CPlayerInfo* _source)
+void CWeaponInfo::Discharge(Vector3 position, Vector3 target, CPlayerInfo* _source)
 {
 	if (bFire)
 	{
@@ -155,7 +148,7 @@ void CWeaponInfo::Discharge(Vector3 position, Vector3* target, CPlayerInfo* _sou
 			// It will last for 3.0 seconds and travel at 500 units per second
 			CProjectile* aProjectile = Create::Projectile("cube", 
 															position, 
-															(*target - position).Normalized(), 
+															(target - position).Normalized(), 
 															2.0f, 
 															10.0f,
 															_source);
@@ -163,9 +156,6 @@ void CWeaponInfo::Discharge(Vector3 position, Vector3* target, CPlayerInfo* _sou
 			aProjectile->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
 			bFire = false;
 			magRounds--;
-
-			target->x += Math::RandFloatMinMax(hRecoilMin,hRecoilMax);
-			target->y += vRecoil;
 		}
 	}
 	else

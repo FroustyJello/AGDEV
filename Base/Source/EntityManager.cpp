@@ -2,6 +2,7 @@
 #include "EntityBase.h"
 #include "Collider/Collider.h"
 #include "Projectile/Laser.h"
+#include "SceneGraph\SceneGraph.h"
 
 #include <iostream>
 using namespace std;
@@ -16,6 +17,9 @@ void EntityManager::Update(double _dt)
 	{
 		(*it)->Update(_dt);
 	}
+
+	// Render the Scene Graph
+	CSceneGraph::GetInstance()->Update();
 
 	// Check for Collision amongst entities with collider properties
 	CheckForCollision();
@@ -48,6 +52,9 @@ void EntityManager::Render()
 	{
 		(*it)->Render();
 	}
+
+	// Render the Scene Graph
+	CSceneGraph::GetInstance()->Render();
 }
 
 // Render the UI entities
@@ -79,6 +86,13 @@ bool EntityManager::RemoveEntity(EntityBase* _existingEntity)
 	{
 		delete *findIter;
 		findIter = entityList.erase(findIter);
+
+		// Remove from SceneNode too
+		if (CSceneGraph::GetInstance()->DeleteNode(_existingEntity)==false)
+		{
+			cout << "EntityManager::RemoveEntity: Unable to remove this entity from Scene Graph" << endl;
+		}
+
 		return true;	
 	}
 	// Return false if not found
@@ -93,6 +107,8 @@ EntityManager::EntityManager()
 // Destructor
 EntityManager::~EntityManager()
 {
+	// Clear out the Scene Graph
+	CSceneGraph::GetInstance()->Destroy();
 }
 
 // Check for overlap
@@ -303,6 +319,19 @@ bool EntityManager::CheckForCollision(void)
 					{
 						(*colliderThis)->SetIsDone(true);
 						(*colliderThat)->SetIsDone(true);
+
+
+						// Remove from Scene Graph
+						if (CSceneGraph::GetInstance()->DeleteNode((*colliderThis)) == true)
+						{
+							cout << "*** This Entity removed ***" << endl;
+						}
+						// Remove from Scene Graph
+						if (CSceneGraph::GetInstance()->DeleteNode((*colliderThat)) == true)
+						{
+							cout << "*** That Entity removed ***" << endl;
+						}
+
 					}
 				}
 			}
