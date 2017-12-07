@@ -1,5 +1,4 @@
-﻿Build started 24/10/2016 3:40:32 PM.
-
-Build succeeded.
-
-Time Elapsed 00:00:00.02
+﻿Application.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+  Base.vcxproj -> C:\Users\163941B\Downloads\NYP_Framework_SOLUTION_with multiple NPCs\NYP_Framework_SOLUTION\Debug\Base.exe
+  Base.vcxproj -> C:\Users\163941B\Downloads\NYP_Framework_SOLUTION_with multiple NPCs\NYP_Framework_SOLUTION\Debug\Base.pdb (Full PDB)
