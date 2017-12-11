@@ -137,7 +137,7 @@ void CWeaponInfo::Update(const double dt)
 }
 
 // Discharge this weapon
-void CWeaponInfo::Discharge(Vector3 position, Vector3 target, CPlayerInfo* _source)
+void CWeaponInfo::Discharge(Vector3 position, Vector3 *target, CPlayerInfo* _source)
 {
 	if (bFire)
 	{
@@ -148,13 +148,15 @@ void CWeaponInfo::Discharge(Vector3 position, Vector3 target, CPlayerInfo* _sour
 			// It will last for 3.0 seconds and travel at 500 units per second
 			CProjectile* aProjectile = Create::Projectile("cube", 
 															position, 
-															(target - position).Normalized(), 
+															(*target - position).Normalized(), 
 															2.0f, 
 															10.0f,
 															_source);
 			aProjectile->SetCollider(true);
 			aProjectile->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
 			bFire = false;
+			target->x += Math::RandFloatMinMax(-0.025f, 0.025f);
+			target->y += Math::RandFloatMinMax(0.025f, 0.075f);
 			magRounds--;
 		}
 	}

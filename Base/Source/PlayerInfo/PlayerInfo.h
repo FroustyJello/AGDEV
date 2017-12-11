@@ -117,4 +117,7 @@ private:
 
 	CWeaponInfo* primaryWeapon;
 	CWeaponInfo* secondaryWeapon;
+
+	bool m_backtoOrg;
+	Vector3 m_orgPos;
 };

@@ -377,6 +377,8 @@ void CPlayerInfo::Update(double dt)
 		Vector3 viewUV = (target - position).Normalized();
 		Vector3 rightUV;
 
+		Vector3 Temp = target;
+
 		{
 			float yaw = (float)(-m_dSpeed * camera_yaw * (float)dt);
 			Mtx44 rotation;
@@ -398,6 +400,18 @@ void CPlayerInfo::Update(double dt)
 			rotation.SetToRotation(pitch, rightUV.x, rightUV.y, rightUV.z);
 			viewUV = rotation * viewUV;
 			target = position + viewUV;
+		}
+
+		if (Temp.y + 0.01f >= target.y && target.y <= Temp.y - 0.01f
+			|| Temp.y + 0.01f <= target.y && target.y >= Temp.y - 0.01f)
+		{
+			m_backtoOrg = false;
+		}
+
+		if (Temp.x + 0.01f >= target.x && target.x <= Temp.x - 0.01f
+			|| Temp.x + 0.01f <= target.x && target.x >= Temp.x - 0.01f)
+		{
+			m_backtoOrg = false;
 		}
 	}
 
@@ -431,12 +445,18 @@ void CPlayerInfo::Update(double dt)
 	if (MouseController::GetInstance()->IsButtonPressed(MouseController::LMB))
 	{
 		if (primaryWeapon)
-			primaryWeapon->Discharge(position, target, this);
+		{
+			m_orgPos = target;
+			primaryWeapon->Discharge(position, &target, this);
+			m_backtoOrg = true;
+		}
 	}
 	else if (MouseController::GetInstance()->IsButtonPressed(MouseController::RMB))
 	{
 		if (secondaryWeapon)
-			secondaryWeapon->Discharge(position, target, this);
+		{
+			secondaryWeapon->Discharge(position, &target, this);
+		}
 	}
 
 	// If the user presses R key, then reset the view to default values
@@ -456,6 +476,27 @@ void CPlayerInfo::Update(double dt)
 		attachedCamera->SetCameraPos(position);
 		attachedCamera->SetCameraTarget(target);
 		attachedCamera->SetCameraUp(up);
+	}
+
+	if (m_backtoOrg == true)
+	{
+		if (m_orgPos.y <= target.y)
+		{
+			target.y -= 0.05f * dt;
+		}
+		else
+		{
+			m_backtoOrg = false;
+		}
+
+		if (m_orgPos.x <= target.x)
+		{
+			target.x -= 0.0005f * dt;
+		}
+		else
+		{
+			target.x += 0.0005f * dt;
+		}
 	}
 }
 
